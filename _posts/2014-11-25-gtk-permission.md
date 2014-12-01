@@ -6,11 +6,14 @@ tags: ["gtk" "file permission"]
 ---
 
 最近，在客户的Linux GUI服务器上出现了一个文件权限相关的bug。公司的wxWidgets UI应用程序在执行某一个操作时会调用系统目录选择对话框（GTK默认提供的）。在目录选择对话框里，用户可以新建目录，但在里面创建的目录的权限和当前的umask设置不一致。
+
+![](/assets/image/2014-12/gtk-perm-1.png)
+
 比如： 客户默认的umask是**0022**, 但创建的目录的权限却是**0754**。由于后续操作需要检测目录权限是否和umask匹配，如果不匹配后续操作就无法进行。
 
 客户的服务器OS版本比较老，是CentOS 4.8 （2009年的），而公司内部的测试机都是CentOS 5.X以上的。
 
-这里把bug的分析过程列出来以供参考。
+这里把bug的分析过程写出来以供参考。
 
 ## 在线调试 ##
 直接在客户的机子上用`strace`打印log，发现在执行系统调用mkdir(2)的时候，传入的权限是**0774**。这说明肯定是程序内部出错了。
@@ -18,9 +21,11 @@ tags: ["gtk" "file permission"]
 ## 重现问题 ##
 刚好开发机的系统版本是CentOS 4.3，所以尝试在上面重现这个bug。在使用Linux服务器上的桌面程序时，通常的做法是借助于一些遵从X11协议的客户端软件，比如Xming，Exceed，VNC, NX等等。这些软件本身充当了X Server的角色。公司内存采用的是NX，关于NX的原理，可以参考一篇[cnblogs上的文章](http://www.cnblogs.com/coderzh/archive/2010/10/07/thinclient-secret-of-nomachine.html)，写的很不错。
 
+![](/assets/image/2014-12/gtk-perm-2.png)
+
 NX支持多组桌面协议，Unix下支持KDE、GNOME、XDM、CDM和Custom环境。其中Custom下只是运行指定的单个程序。
 
-![](http://images.cnblogs.com/cnblogs_com/coderzh/WindowsLiveWriter/ffea4898ff31_BD68/nomachine-protocol_thumb.png)
+![](/assets/image/2014-12/gtk-perm-3.png)
 
 写了一个小程序专门用来测试。在Custom选项下直接启动gnome-terminal，试了好久都重现不了这个问题。而在GNOME环境下很容易就重现了问题。
 
