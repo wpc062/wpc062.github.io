@@ -1,9 +1,13 @@
 ---
 layout: post
 title: gtk下的文件权限问题
-categories: ["gtk" “Linux”]
-tags: ["gtk" "file permission"]
+description: 本文描述了一个gtk下的文件权限问题，并分析了产生的原因。
+category: gtk
+tags: gtk 文件权限
+refer_blog_addr:
+refer_post_addr:
 ---
+{% include JB/setup %}
 
 最近，在客户的Linux GUI服务器上出现了一个文件权限相关的bug。公司的wxWidgets UI应用程序在执行某一个操作时会调用系统目录选择对话框（GTK默认提供的）。在目录选择对话框里，用户可以新建目录，但在里面创建的目录的权限和当前的umask设置不一致。
 
