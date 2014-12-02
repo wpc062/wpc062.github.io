@@ -1,7 +1,7 @@
 ---
 layout: post
-title: gtk下的文件权限问题
-description: 本文描述了一个gtk下的文件权限问题，并分析了产生的原因。
+title: 一个gtk下的目录权限问题
+description: 本文描述了一个gtk下的目录权限问题，并分析了产生的原因。
 category: gtk
 tags: gtk 文件权限
 refer_blog_addr:
